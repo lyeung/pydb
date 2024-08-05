@@ -50,25 +50,25 @@ def record():
     p.terminate()
 
 def detect_live():
-    p = pyaudio.pyaudio()
-    stream = p.open(format = format,
-                    channels = channels,
-                    rate = rate,
-                    input = true,
-                    frames_per_buffer=chunk)
-    while true:
-        data = stream.read(chunk)
+    p = pyaudio.PyAudio()
+    stream = p.open(format = FORMAT,
+                    channels = CHANNELS,
+                    rate = RATE,
+                    input = True,
+                    frames_per_buffer=CHUNK)
+    while True:
+        data = stream.read(CHUNK)
         rms = audioop.rms(data, 2)
         db = 20 * math.log10(rms)
         print(f'rms:[{rms}], db:[{db}]')
 
         if db > 60:
             with wave.open(sys.argv[2] + str(round(time.time() * 1000)) , 'wb') as wf:
-                wf.setnchannels(channels)
-                wf.setsampwidth(p.get_sample_size(format))
-                wf.setframerate(rate)
-                for _ in range(0, rate//chunk *  record_seconds):
-                    wf.writeframes(stream.read(chunk))
+                wf.setnchannels(CHANNELS)
+                wf.setsampwidth(p.get_sample_size(FORMAT))
+                wf.setframerate(RATE)
+                for _ in range(0, RATE//CHUNK *  RECORD_SECONDS):
+                    wf.writeframes(stream.read(CHUNK))
 
 
     wf.close()
